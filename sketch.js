@@ -1,19 +1,31 @@
 //Create variables here
-let dog,dogImg, happyDog, database, foodS, foodStock;
+let dog,dogImg, happyDogImg, database, foodS, foodStock;
 
 function preload()
 {
   //load images here
   dogImg = loadImage("images/dogImg.png");
-  happyDog = loadImage("images/dogImg1.png");
+  happyDogImg = loadImage("images/dogImg1.png");
 }
 
 function setup() {
   createCanvas(500, 500);
-  dog = createSprite(400,400);
-  dog.addImage("dogImg");
-  foodStock.database.ref('food');
-  foodStock.on("value",readStock)
+  database = firebase.database();
+  dog = createSprite(250,300);
+  dog.addImage(dogImg);
+  dog.scale = 0.35;
+
+  
+  feedButton = createButton("Feed the dog");
+  feedButton.position(width/2-50,80);
+
+  addFoodButton = createButton("Add food to the stock");
+  addFoodButton.position(width/2+50,80);
+
+  foodObj = new Food();
+  foodObj.getFoodStock();
+
+  
 }
 
 
@@ -22,26 +34,23 @@ function draw() {
   
   //add styles here
   background(46, 139, 87);
-  if (keyWentDown(UP_ARROW)) {
-    writeStock(foodS);
-    dog.addImage(happyDog);
-  }
+  
   drawSprites();
-  stroke(3)
-  fill("black");
-  textSize(50);
-  text("",foodS,250,100);
+  
+
+  feedButton.mousePressed(function(){
+    dog.addImage(happyDogImg);
+    
+    foodS = foodS-1;
+    foodObj.updateFoodStock(foodS);
+    
+
+  });
+
+  addFoodButton.mousePressed(function(){
+    foodS+=1;
+    foodObj.updateFoodStock(foodS);
+  });
+  
 }
-function writeStock(x){
-  if (foodStock<=0) {
-    foodStock=0;
-  } else {
-    foodStock=foodStock-1
-  }
-  database.ref(food).update({
-    food:x
-  })
-}
-function readStock(data){
-  foodS=data.val();
-}
+
