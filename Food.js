@@ -1,33 +1,40 @@
 class Food{
-    constructor(x,y,foodStock,lastfeed){
-        this.body = Matter.Bodies.restitution(x,y,radius,{restitution:0.3, friction: 0.5, density:1.2});
-        World.add(world,this.body);
-        this.width = width;
-        this.hight = hight
+    constructor(){
         this.image = loadImage("images/Milk.png");
     }
-    display(){
-        //fill("red"),
-        food=createButton("feed the dog");
-        feed.position(700,95);
-        feed.mousePresed(feedDog);
 
-        addFood = createButton("add food");
-        addFood.position(800,95);
-        addFood.mousePresed(addfoods);
-        //if ( ) {
-            
-        //}
+     display(){
+
+        var x = 80, y = 100;
         imageMode(CENTER);
-        image(this.image,this.body.position.x,this.body.position.y,20,20);
+        image(this.image,700,300,70,70);
+
+        if (foodS !== 0){
+            for (var i=0; i<foodS; i++){
+
+                if (i%10 === 0){
+                    y = y+50;
+                    x = 80;
+                }
+                image(this.image,x,y,50,50);
+                x = x+30;
+            }
+        }
+
+
     }
     getFoodStock(){
-
+        var foodStockRef=database.ref('food');
+        foodStockRef.on("value",function(data){
+            foodS = data.val();
+        });
     } 
-    updateFoodStock(){
 
+    updateFoodStock(x){
+        database.ref('/').update({
+            food:x
+          });
     } 
-    deductFood(){
 
-    }
+    
 }
